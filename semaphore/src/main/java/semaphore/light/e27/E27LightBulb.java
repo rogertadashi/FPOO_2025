@@ -1,5 +1,8 @@
 package semaphore.light.e27;
 
-public class E27LightBulb {
+import semaphore.light.AbstractLight;
+import semaphore.light.Light;
+
+public class E27LightBulb extends AbstractLight{
 
 }
