@@ -4,7 +4,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.io.IOException;
 
-import semaphore.trafficLight.simple.SimpleTrafficLight;
+import semaphore.trafficLight.SimpleTrafficLight;
 import semaphore.util.gui.MyWindow;
 
 public class AppSimpleTrafficLight {
@@ -20,4 +20,5 @@ public class AppSimpleTrafficLight {
 		MyWindow window = new MyWindow();
 		window.add(defaultOne);
 		window.add(customOne);
+	}
 }

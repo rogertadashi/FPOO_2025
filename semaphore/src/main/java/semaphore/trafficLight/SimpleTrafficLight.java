@@ -1,17 +1,19 @@
-package semaphore.trafficLight.simple;
+package semaphore.trafficLight;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
-
 import javax.imageio.ImageIO;
 
 import semaphore.light.e27.E27LightBulb;
 import semaphore.spot.SpotLight;
+import semaphore.util.TurnOnOff;
+import semaphore.util.gui.Paintable;
 
-public class SimpleTrafficLight implements Paintable{
+public class SimpleTrafficLight implements Paintable,TrafficLight{
 	
 	private Point position = new Point(0,0);
 	private Dimension dimension = new Dimension(70,180);
@@ -19,6 +21,7 @@ public class SimpleTrafficLight implements Paintable{
 	private SpotLight yellow;
 	private SpotLight green;
 	private SpotLight red;
+	private BufferedImage mask;
 	
 	private String currentRelativePath() {
 		
@@ -32,14 +35,19 @@ public class SimpleTrafficLight implements Paintable{
 	
 	private SpotLight createSpot( String color ) throws IOException{
 		
+		int xLeft = this.position.x;
+		int yTop = this.position.y;
+		int width = this.dimension.width;
+		int height = this.dimension.height;
+		
 		final String path = currentRelativePath() + "img/";
 		URL url;
 		
 		url = getClass().getResource(path + color +"On.png");
-		Image maskOn = ImageIO.read(url);
+		BufferedImage maskOn = ImageIO.read(url);
 		
 		url = getClass().getResource(path + color +"Off.png");
-		Image maskOff = ImageIO.read(url);
+		BufferedImage maskOff = ImageIO.read(url);
 		
 		SpotLight spot = new SpotLight(maskOn,maskOff);
 		spot.setPosition(xLeft, yTop);
@@ -139,6 +147,27 @@ public class SimpleTrafficLight implements Paintable{
 	
 	public Dimension getDimension() {
 		return new Dimension(this.dimension);
+	}
+
+	@Override
+	public void add(Paintable paintable) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public TurnOnOff spotGreen() {
+		return this.green;
+	}
+
+	@Override
+	public TurnOnOff spotYellow() {
+		return this.yellow;
+	}
+
+	@Override
+	public TurnOnOff spotRed() {
+		return this.red;
 	}
 	
 	
