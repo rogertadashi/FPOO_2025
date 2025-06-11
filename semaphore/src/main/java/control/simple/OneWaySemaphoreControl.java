@@ -7,14 +7,16 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 import semaphore.trafficLight.SimpleTrafficLight;
 import semaphore.trafficLight.SimpleTrafficLightControl;
 import semaphore.trafficLight.TrafficLight;
+import semaphore.trafficLight.control.TrafficLightControl;
 import semaphore.util.gui.MyWindow;
 
 
-public class OneWaySemaphoreControl<TrafficLightControl> implements SemaphoreControl{
+public class OneWaySemaphoreControl implements SemaphoreControl{
 	
 	private List<TrafficLightControl> trafficLights = new ArrayList<>();
 	
@@ -54,6 +56,26 @@ public class OneWaySemaphoreControl<TrafficLightControl> implements SemaphoreCon
 		}
 	}
 	
+	public class ForEachExample{
+		
+		private int[] vInt = {0,1,2,3,4,5,6,7,8,9};
+		
+		public void forEach(Consumer<Integer> consumer) {
+			
+			for(int i=0 ; i<vInt.length ; i++)
+				consumer.accept(vInt[i]);
+		}
+		
+	public static void main(String[] args) {
+			
+			ForEachExample fee = new ForEachExample();
+			
+			fee.forEach(e->System.out.println(e));
+			
+			fee.forEach(System.out::println);
+		}
+	}
+	
 	private void doYellowRedGreen()throws InterruptedException{
 		
 		trafficLights.forEach(e->e.turnYellow());
@@ -88,20 +110,26 @@ public class OneWaySemaphoreControl<TrafficLightControl> implements SemaphoreCon
 
 	@Override
 	public void turnOn() {
-		// TODO Auto-generated method stub
+		
+		if(state == OnOff.ON)
+			return;
+		
+		state = OnOff.ON;
+		run();
 		
 	}
 
 	@Override
 	public void turnOff() {
-		// TODO Auto-generated method stub
+		
+		state = OnOff.OFF;
 		
 	}
 
 	@Override
 	public boolean isOn() {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return ( state == OnOff.ON);
 	}
 
 	@Override
@@ -112,25 +140,25 @@ public class OneWaySemaphoreControl<TrafficLightControl> implements SemaphoreCon
 
 	@Override
 	public void setGreenSeconds(int seconds) {
-		// TODO Auto-generated method stub
+		this.greenMillis = seconds * 1_000;
 		
 	}
 
 	@Override
 	public void setYelloweconds(int seconds) {
-		// TODO Auto-generated method stub
-		
+		this.yellowMillis = seconds * 1_000;
 	}
 
 	@Override
 	public void setRedSeconds(int seconds) {
-		// TODO Auto-generated method stub
+		this.redMillis = seconds * 1_000;
 		
 	}
 
 	@Override
 	public void setAlertPeriod(LocalTime start, LocalTime end) {
-		// TODO Auto-generated method stub
+		this.alertStart = start;
+		this.alertEnd = end;
 		
 	}
 	
@@ -140,7 +168,7 @@ public class OneWaySemaphoreControl<TrafficLightControl> implements SemaphoreCon
 		oneWaySimpleSemaphoreTest() throws IOException{
 			
 			SimpleTrafficLight defaultOne = new SimpleTrafficLight();
-			trafficLightControl trafficLightControl = new SimpleTrafficLightControl(defaultOne);
+			TrafficLightControl trafficLightControl = new SimpleTrafficLightControl(defaultOne);
 			SemaphoreControl semaphoreControl = new OneWaySemaphoreControl(trafficLightControl);
 			
 			semaphoreControl.setAlertPeriod(LocalTime.now(), LocalTime.now().plusSeconds(30));
